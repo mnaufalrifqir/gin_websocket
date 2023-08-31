@@ -6,10 +6,10 @@ services:
     image: mysql
     restart: always
     environment:
-      MYSQL_DB: gin-framework
+      MYSQL_DATABASE: gin-framework
       MYSQL_ROOT_PASSWORD: example
     ports:
-      - 3306:3306
+      - 3307:3306
 
   adminer:
     image: adminer
@@ -21,7 +21,7 @@ services:
     build: .
     restart: always
     ports:
-      - 8000:8000
-      - 9000:9000
+      - 8888:8000
+      - 9999:9000
     depends_on:
       - db
