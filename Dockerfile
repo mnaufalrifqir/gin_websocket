@@ -1,10 +1,12 @@
-FROM golang:1.17-alpine
-
+FROM golang:alpine AS builder
+RUN apk update && apk add --no-cache git
 WORKDIR /app
-
 COPY . .
+RUN go build -o main ./main.go
 
-RUN go mod download
-RUN go build -o .
-
+FROM alpine
+WORKDIR /app
+COPY --from=builder /app/main /app
+COPY --from=builder /app/.env /app
 CMD [ "./main" ]
+    
