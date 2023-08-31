@@ -1,0 +1,240 @@
+basePath: /
+definitions:
+  models.AllStudentResponse:
+    properties:
+      students:
+        items:
+          $ref: '#/definitions/models.StudentResponse'
+        type: array
+    type: object
+  models.ResponseFailedCreate:
+    properties:
+      message:
+        example: Failed create student!
+        type: string
+    type: object
+  models.ResponseFailedDelete:
+    properties:
+      message:
+        example: Failed delete student!
+        type: string
+    type: object
+  models.ResponseFailedUpdate:
+    properties:
+      message:
+        example: Failed update student!
+        type: string
+    type: object
+  models.ResponseInvalid:
+    properties:
+      message:
+        example: Invalid request!
+        type: string
+    type: object
+  models.ResponseStudentNotFound:
+    properties:
+      message:
+        example: Student not found!
+        type: string
+    type: object
+  models.ResponseSuccessCreate:
+    properties:
+      message:
+        example: Successfully create student!
+        type: string
+    type: object
+  models.ResponseSuccessDelete:
+    properties:
+      message:
+        example: Successfully delete student!
+        type: string
+    type: object
+  models.ResponseSuccessUpdate:
+    properties:
+      message:
+        example: Successfully update student!
+        type: string
+    type: object
+  models.StudentInput:
+    properties:
+      jurusan:
+        type: string
+      name:
+        type: string
+      nim:
+        type: string
+    type: object
+  models.StudentResponse:
+    properties:
+      Created_at:
+        type: string
+      Deleted_at:
+        type: string
+      ID:
+        type: integer
+      Jurusan:
+        type: string
+      Name:
+        type: string
+      Nim:
+        type: string
+      Updated_at:
+        type: string
+    type: object
+  models.StudentResponseByID:
+    properties:
+      student:
+        $ref: '#/definitions/models.StudentResponse'
+    type: object
+  models.StudentUpdate:
+    properties:
+      name:
+        type: string
+    type: object
+host: localhost:8888
+info:
+  contact: {}
+  description: API for CRUD Students
+  title: CRUD Students API
+  version: "1.0"
+paths:
+  /students:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all students
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AllStudentResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ResponseStudentNotFound'
+      summary: Get all students
+      tags:
+      - students
+    post:
+      consumes:
+      - application/json
+      description: Create a new student
+      parameters:
+      - description: Student object that needs to be added
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/models.StudentInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.ResponseSuccessCreate'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResponseInvalid'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseFailedCreate'
+      summary: Create a new student
+      tags:
+      - students
+  /students/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete student by ID
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseSuccessDelete'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ResponseStudentNotFound'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseFailedDelete'
+      summary: Delete student by ID
+      tags:
+      - students
+    get:
+      consumes:
+      - application/json
+      description: Get student details by ID
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.StudentResponseByID'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ResponseStudentNotFound'
+      summary: Get student by ID
+      tags:
+      - students
+    put:
+      consumes:
+      - application/json
+      description: Update student details by ID with JSON data
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated student object
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/models.StudentUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseSuccessUpdate'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResponseInvalid'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ResponseStudentNotFound'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseFailedUpdate'
+      summary: Update student by ID
+      tags:
+      - students
+swagger: "2.0"
