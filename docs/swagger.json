@@ -6,7 +6,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:8888",
+    "host": "localhost:8000",
     "basePath": "/",
     "paths": {
         "/students": {
@@ -29,8 +29,8 @@
                             "$ref": "#/definitions/models.AllStudentResponse"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "204": {
+                        "description": "No Content",
                         "schema": {
                             "$ref": "#/definitions/models.ResponseStudentNotFound"
                         }
@@ -111,8 +111,8 @@
                             "$ref": "#/definitions/models.StudentResponseByID"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "204": {
+                        "description": "No Content",
                         "schema": {
                             "$ref": "#/definitions/models.ResponseStudentNotFound"
                         }
@@ -156,16 +156,16 @@
                             "$ref": "#/definitions/models.ResponseSuccessUpdate"
                         }
                     },
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseStudentNotFound"
+                        }
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/models.ResponseInvalid"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/models.ResponseStudentNotFound"
                         }
                     },
                     "500": {
@@ -204,8 +204,8 @@
                             "$ref": "#/definitions/models.ResponseSuccessDelete"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "204": {
+                        "description": "No Content",
                         "schema": {
                             "$ref": "#/definitions/models.ResponseStudentNotFound"
                         }

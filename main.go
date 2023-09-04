@@ -9,7 +9,7 @@ import (
 // @title CRUD Students API
 // @version 1.0
 // @description API for CRUD Students
-// @host localhost:8888
+// @host localhost:8000
 // @BasePath /
 func main() {
 	config := db.Config{

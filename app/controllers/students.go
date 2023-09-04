@@ -3,6 +3,7 @@ package controllers
 import (
 	"gin-framework/app/db"
 	"gin-framework/app/models"
+	"log"
 	"net/http"
 
 	ws "gin-framework/app/websocket"
@@ -25,6 +26,7 @@ func CreateStudent(c *gin.Context) {
 	var student models.Student
 
 	if err := c.ShouldBindJSON(&studentRequest); err != nil {
+		ws.SendWebSocketUpdate("Invalid request!")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Invalid request!",
 		})
@@ -36,6 +38,8 @@ func CreateStudent(c *gin.Context) {
 	student.Jurusan = studentRequest.Jurusan
 
 	if err := db.DB.Create(&student).Error; err != nil {
+		ws.SendWebSocketUpdate("Failed to create student!")
+		log.Printf("Failed to create student!")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Failed to create student!",
 		})
@@ -43,6 +47,7 @@ func CreateStudent(c *gin.Context) {
 	}
 
 	ws.SendWebSocketUpdate("Success create student")
+	log.Printf("Student created!")
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Successfully created student!",
@@ -56,12 +61,13 @@ func CreateStudent(c *gin.Context) {
 // @Produce json
 // @Param id path int true "Student ID"
 // @Success 200 {object} models.StudentResponseByID
-// @Failure 404 {object} models.ResponseStudentNotFound
+// @Failure 204 {object} models.ResponseStudentNotFound
 // @Router /students/{id} [get]
 func GetStudentByID(c *gin.Context) {
 	var student models.Student
 
 	if err := db.DB.Where("id = ?", c.Param("id")).First(&student).Error; err != nil {
+		ws.SendWebSocketUpdate("Student not found!")
 		c.JSON(http.StatusNotFound, gin.H{
 			"message": "Student not found!",
 		})
@@ -81,19 +87,20 @@ func GetStudentByID(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Success 200 {object} models.AllStudentResponse
-// @Failure 404 {object} models.ResponseStudentNotFound
+// @Failure 204 {object} models.ResponseStudentNotFound
 // @Router /students [get]
 func ReadAllStudents(c *gin.Context) {
 	var students []models.Student
 
 	if err := db.DB.Find(&students).Error; err != nil {
+		ws.SendWebSocketUpdate("Student not found!")
 		c.JSON(http.StatusNotFound, gin.H{
 			"message": "Students not found!",
 		})
 		return
 	}
 
-	ws.SendWebSocketUpdate("Success get student by ID")
+	ws.SendWebSocketUpdate("Success all students")
 
 	c.JSON(http.StatusOK, gin.H{
 		"students": students,
@@ -109,7 +116,7 @@ func ReadAllStudents(c *gin.Context) {
 // @Param student body models.StudentUpdate true "Updated student object"
 // @Success 200 {object} models.ResponseSuccessUpdate
 // @Failure 400 {object} models.ResponseInvalid
-// @Failure 404 {object} models.ResponseStudentNotFound
+// @Failure 204 {object} models.ResponseStudentNotFound
 // @Failure 500 {object} models.ResponseFailedUpdate
 // @Router /students/{id} [put]
 func UpdateStudentByID(c *gin.Context) {
@@ -117,6 +124,7 @@ func UpdateStudentByID(c *gin.Context) {
 	var studentRequest models.StudentUpdate
 
 	if err := db.DB.Where("id = ?", c.Param("id")).First(&student).Error; err != nil {
+		ws.SendWebSocketUpdate("Student not found!")
 		c.JSON(http.StatusNotFound, gin.H{
 			"message": "Student not found!",
 		})
@@ -124,6 +132,7 @@ func UpdateStudentByID(c *gin.Context) {
 	}
 
 	if err := c.ShouldBindJSON(&studentRequest); err != nil {
+		ws.SendWebSocketUpdate("Invalid request!")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Invalid request!",
 		})
@@ -133,6 +142,7 @@ func UpdateStudentByID(c *gin.Context) {
 	student.Name = studentRequest.Name
 
 	if err := db.DB.Save(&student).Error; err != nil {
+		ws.SendWebSocketUpdate("Failed to update student!")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Failed to update student!",
 		})
@@ -153,13 +163,14 @@ func UpdateStudentByID(c *gin.Context) {
 // @Produce json
 // @Param id path int true "Student ID"
 // @Success 200 {object} models.ResponseSuccessDelete
-// @Failure 404 {object} models.ResponseStudentNotFound
+// @Failure 204 {object} models.ResponseStudentNotFound
 // @Failure 500 {object} models.ResponseFailedDelete
 // @Router /students/{id} [delete]
 func DeleteStudentByID(c *gin.Context) {
 	var student models.Student
 
 	if err := db.DB.Where("id = ?", c.Param("id")).First(&student).Error; err != nil {
+		ws.SendWebSocketUpdate("Student not found!")
 		c.JSON(http.StatusNotFound, gin.H{
 			"message": "Student not found!",
 		})
@@ -167,6 +178,7 @@ func DeleteStudentByID(c *gin.Context) {
 	}
 
 	if err := db.DB.Delete(&student).Error; err != nil {
+		ws.SendWebSocketUpdate("Failed to delete student!")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Failed to delete student!",
 		})

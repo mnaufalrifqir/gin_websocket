@@ -36,8 +36,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/models.AllStudentResponse"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "204": {
+                        "description": "No Content",
                         "schema": {
                             "$ref": "#/definitions/models.ResponseStudentNotFound"
                         }
@@ -118,8 +118,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/models.StudentResponseByID"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "204": {
+                        "description": "No Content",
                         "schema": {
                             "$ref": "#/definitions/models.ResponseStudentNotFound"
                         }
@@ -163,16 +163,16 @@ const docTemplate = `{
                             "$ref": "#/definitions/models.ResponseSuccessUpdate"
                         }
                     },
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseStudentNotFound"
+                        }
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/models.ResponseInvalid"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/models.ResponseStudentNotFound"
                         }
                     },
                     "500": {
@@ -211,8 +211,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/models.ResponseSuccessDelete"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "204": {
+                        "description": "No Content",
                         "schema": {
                             "$ref": "#/definitions/models.ResponseStudentNotFound"
                         }
@@ -373,7 +373,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8888",
+	Host:             "localhost:8000",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "CRUD Students API",

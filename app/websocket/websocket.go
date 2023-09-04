@@ -20,33 +20,6 @@ var (
 	clientsMu sync.Mutex
 )
 
-func HandleWebSocket(c *gin.Context) {
-	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
-	if err != nil {
-		log.Println("Error upgrading connection:", err)
-		return
-	}
-	defer func() {
-		conn.Close()
-
-		clientsMu.Lock()
-		delete(clients, conn)
-		clientsMu.Unlock()
-	}()
-
-	clientsMu.Lock()
-	clients[conn] = true
-	clientsMu.Unlock()
-
-	for {
-		_, _, err := conn.ReadMessage()
-		if err != nil {
-			log.Println("Error reading message:", err)
-			break
-		}
-	}
-}
-
 func StartWebSocketServer() {
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		conn, err := upgrader.Upgrade(w, r, nil)
@@ -75,7 +48,35 @@ func StartWebSocketServer() {
 		}
 	})
 
+	// http.ListenAndServe(":9000", nil)
 	http.ListenAndServe(utils.GetConfig("WS_PORT"), nil)
+}
+
+func HandleWebSocket(c *gin.Context) {
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		log.Println("Error upgrading connection:", err)
+		return
+	}
+	defer func() {
+		conn.Close()
+
+		clientsMu.Lock()
+		delete(clients, conn)
+		clientsMu.Unlock()
+	}()
+
+	clientsMu.Lock()
+	clients[conn] = true
+	clientsMu.Unlock()
+
+	for {
+		_, _, err := conn.ReadMessage()
+		if err != nil {
+			log.Println("Error reading message:", err)
+			break
+		}
+	}
 }
 
 func BroadcastMessage(message string) {
